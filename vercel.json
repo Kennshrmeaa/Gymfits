@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "rootDirectory": "Gym Techno/gymfit-ph",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ]
+}
