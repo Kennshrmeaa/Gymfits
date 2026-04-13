@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GymFit — Build Your Best Body</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================
+     NAVBAR: LANDING (shown when NOT logged in / on landing page)
+============================================================ -->
+<nav id="navbar-land">
+<div class="nav-inner">
+  <a class="nav-logo" href="#" onclick="event.preventDefault();goLand()">
+    <div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 80 30"><rect x="0" y="9" width="11" height="12" rx="3" fill="white"/><rect x="11" y="4" width="7" height="22" rx="3" fill="white"/><rect x="18" y="12" width="44" height="6" rx="3" fill="white"/><rect x="62" y="4" width="7" height="22" rx="3" fill="white"/><rect x="69" y="9" width="11" height="12" rx="3" fill="white"/></svg></div>
+    <div class="nav-logo-text">GYMFIT</div>
+  </a>
+  <div class="nav-links" id="land-nav-links">
+    <button class="nav-link" onclick="scr('features')">Features</button>
+    <button class="nav-link" onclick="scr('bmi-calc')">BMI Calc</button>
+    <button class="nav-link" onclick="scr('workouts')">Workouts</button>
+    <button class="nav-link" onclick="scr('nutrition')">Nutrition</button>
+    <button class="nav-link" onclick="scr('coaches')">Coaches</button>
+    <button class="nav-link" onclick="scr('ai-sec')">AI Coach</button>
+    <button class="nav-link" onclick="scr('pricing')">Pricing</button>
+  </div>
+  <div class="nav-actions">
+    <div id="land-nav-out" style="display:flex;gap:7px">
+      <button class="nav-btn nav-btn-ghost" onclick="openAuth('login')">LOG IN</button>
+      <button class="nav-btn nav-btn-red" onclick="openAuth('signup')">SIGN UP FREE</button>
+    </div>
+    <div id="land-nav-in" style="display:none;align-items:center;gap:8px" class="nav-user">
+      <button class="nav-btn nav-btn-red" onclick="goDb()">MY DASHBOARD →</button>
+      <div class="nav-avatar" id="land-nav-ava" onclick="goDb()" title="Go to Dashboard">A</div>
+    </div>
+  </div>
+  <button class="hamburger" onclick="toggleMob('land-mob')"><span></span><span></span><span></span></button>
+</div>
+</nav>
+
+<!-- ============================================================
+     NAVBAR: DASHBOARD (shown when logged in)
+============================================================ -->
+<nav id="navbar-db" style="display:none">
+<div class="nav-inner">
+  <a class="nav-logo" href="#" onclick="event.preventDefault();goDb()">
+    <div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 80 30"><rect x="0" y="9" width="11" height="12" rx="3" fill="white"/><rect x="11" y="4" width="7" height="22" rx="3" fill="white"/><rect x="18" y="12" width="44" height="6" rx="3" fill="white"/><rect x="62" y="4" width="7" height="22" rx="3" fill="white"/><rect x="69" y="9" width="11" height="12" rx="3" fill="white"/></svg></div>
+    <div class="nav-logo-text">GYMFIT</div>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link" onclick="showPanel('home')">🏠 Home</button>
+    <button class="nav-link" onclick="showPanel('workout')">🏋️ Workout</button>
+    <button class="nav-link" onclick="showPanel('nutrition')">🥗 Nutrition</button>
+    <button class="nav-link" onclick="showPanel('ai')">🤖 AI Coach</button>
+    <button class="nav-link" onclick="showPanel('progress')">📊 Progress</button>
+    <button class="nav-link" onclick="showPanel('settings')">⚙️ Settings</button>
+    <button class="nav-link" style="color:var(--txt4)" onclick="goLand()">← Home Page</button>
+  </div>
+  <div class="nav-actions">
+    <div class="nav-user" style="display:flex;align-items:center;gap:9px">
+      <div style="text-align:right">
+        <div style="font-size:13px;font-weight:700;color:#fff" id="db-nav-uname">Alex</div>
+        <div style="font-size:10px;color:var(--txt3)" id="db-nav-plan">Free Trial</div>
+      </div>
+      <div class="nav-avatar" id="db-nav-ava" onclick="showPanel('settings')" title="Settings">A</div>
+      <button class="nav-btn nav-btn-ghost" style="font-size:12px;padding:6px 12px" onclick="doLogout()">LOG OUT</button>
+    </div>
+  </div>
+  <button class="hamburger" onclick="toggleMob('db-mob')"><span></span><span></span><span></span></button>
+</div>
+</nav>
+
+<!-- MOB MENU: LANDING -->
+<div class="mob-menu" id="land-mob">
+  <button class="mob-link" onclick="scr('features');closeMob('land-mob')">FEATURES</button>
+  <button class="mob-link" onclick="scr('bmi-calc');closeMob('land-mob')">BMI CALCULATOR</button>
+  <button class="mob-link" onclick="scr('workouts');closeMob('land-mob')">WORKOUTS</button>
+  <button class="mob-link" onclick="scr('nutrition');closeMob('land-mob')">NUTRITION</button>
+  <button class="mob-link" onclick="scr('coaches');closeMob('land-mob')">COACHES</button>
+  <button class="mob-link" onclick="scr('ai-sec');closeMob('land-mob')">AI COACH</button>
+  <button class="mob-link" onclick="scr('pricing');closeMob('land-mob')">PRICING</button>
+  <div id="land-mob-out" style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-ghost" onclick="openAuth('login');closeMob('land-mob')" style="font-size:18px;padding:12px 28px">LOG IN</button>
+    <button class="btn btn-red" onclick="openAuth('signup');closeMob('land-mob')" style="font-size:18px;padding:12px 28px">SIGN UP FREE</button>
+  </div>
+  <div id="land-mob-in" style="display:none;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-red" onclick="goDb();closeMob('land-mob')" style="font-size:18px;padding:12px 28px">GO TO DASHBOARD →</button>
+    <button class="btn btn-dark" onclick="doLogout();closeMob('land-mob')" style="font-size:18px;padding:12px 28px">LOG OUT</button>
+  </div>
+</div>
+
+<!-- MOB MENU: DASHBOARD -->
+<div class="mob-menu" id="db-mob">
+  <button class="mob-link" onclick="showPanel('home');closeMob('db-mob')">🏠 HOME</button>
+  <button class="mob-link" onclick="showPanel('workout');closeMob('db-mob')">🏋️ WORKOUT</button>
+  <button class="mob-link" onclick="showPanel('nutrition');closeMob('db-mob')">🥗 NUTRITION</button>
+  <button class="mob-link" onclick="showPanel('ai');closeMob('db-mob')">🤖 AI COACH</button>
+  <button class="mob-link" onclick="showPanel('coach');closeMob('db-mob')">👨‍🏫 COACHES</button>
+  <button class="mob-link" onclick="showPanel('progress');closeMob('db-mob')">📊 PROGRESS</button>
+  <button class="mob-link" onclick="showPanel('bmi');closeMob('db-mob')">🔢 BMI TRACKER</button>
+  <button class="mob-link" onclick="showPanel('settings');closeMob('db-mob')">⚙️ SETTINGS</button>
+  <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+    <button class="btn" style="font-size:15px;padding:10px 22px;background:transparent;color:var(--txt3);border:1px solid var(--border2)" onclick="goLand();closeMob('db-mob')">← HOME PAGE</button>
+    <button class="btn btn-dark" onclick="doLogout();closeMob('db-mob')" style="font-size:15px;padding:10px 22px">LOG OUT</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     LANDING PAGE
+============================================================ -->
+<div id="land">
+
+<!-- HERO -->
+<section id="hero">
+  <div style="position:absolute;inset:0;overflow:hidden">
+    <div class="gym-pattern"></div>
+    <div class="hero-glow" style="width:600px;height:600px;background:radial-gradient(circle,rgba(220,20,60,0.2) 0%,transparent 70%);top:-150px;right:-150px"></div>
+    <div class="hero-glow" style="width:380px;height:380px;background:radial-gradient(circle,rgba(220,20,60,0.12) 0%,transparent 70%);bottom:-90px;left:-90px"></div>
+  </div>
+  <div class="max" style="width:100%"><div class="hero-content">
+    <div class="hero-eyebrow">🏋️ #1 Fitness App in the Philippines</div>
+    <div class="hero-title">BUILD YOUR<span>BEST BODY</span></div>
+    <p class="hero-sub">Personalized workout plans, nutrition guides, AI coaching, and live trainers — starting free, upgrade for ₱99/month.</p>
+    <div class="hero-stats">
+      <div style="text-align:center"><div class="hero-stat-num">50K+</div><div class="hero-stat-lbl">MEMBERS</div></div>
+      <div class="hero-stat-featured" style="text-align:center;border-left:1px solid var(--border2);border-right:1px solid var(--border2);padding:0 clamp(14px,3vw,40px)"><div class="hero-stat-num" style="color:#fff">4.9★</div><div class="hero-stat-lbl">RATING</div></div>
+      <div style="text-align:center"><div class="hero-stat-num">8 WK</div><div class="hero-stat-lbl">PROGRAM</div></div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-hero btn-hero-red glow" onclick="openAuth('signup')">START FREE TRIAL →</button>
+      <button class="btn-hero btn-hero-out" onclick="scr('features')">EXPLORE FEATURES</button>
+    </div>
+    <div style="margin-top:20px;font-size:12px;color:var(--txt4)">🔒 No credit card · 7-day free trial · Cancel anytime</div>
+  </div></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track">
+  <span class="ticker-item">LOSE WEIGHT</span><span class="ticker-dot">●</span><span class="ticker-item">BUILD MUSCLE</span><span class="ticker-dot">●</span><span class="ticker-item">GET SHREDDED</span><span class="ticker-dot">●</span><span class="ticker-item">STAY CONSISTENT</span><span class="ticker-dot">●</span><span class="ticker-item">EAT RIGHT</span><span class="ticker-dot">●</span><span class="ticker-item">TRAIN SMART</span><span class="ticker-dot">●</span><span class="ticker-item">CRUSH YOUR GOALS</span><span class="ticker-dot">●</span><span class="ticker-item">NO EXCUSES</span><span class="ticker-dot">●</span>
+  <span class="ticker-item">LOSE WEIGHT</span><span class="ticker-dot">●</span><span class="ticker-item">BUILD MUSCLE</span><span class="ticker-dot">●</span><span class="ticker-item">GET SHREDDED</span><span class="ticker-dot">●</span><span class="ticker-item">STAY CONSISTENT</span><span class="ticker-dot">●</span><span class="ticker-item">EAT RIGHT</span><span class="ticker-dot">●</span><span class="ticker-item">TRAIN SMART</span><span class="ticker-dot">●</span><span class="ticker-item">CRUSH YOUR GOALS</span><span class="ticker-dot">●</span><span class="ticker-item">NO EXCUSES</span><span class="ticker-dot">●</span>
+</div></div>
+
+<!-- FEATURES -->
+<section class="sec" id="features"><div class="max">
+  <div style="text-align:center;margin-bottom:44px">
+    <div class="sec-tag">⚡ WHAT YOU GET</div>
+    <div class="sec-title">EVERYTHING YOU NEED<br><span class="text-red">TO SUCCEED</span></div>
+    <p class="sec-sub" style="margin:0 auto">Built for beginners. Workouts, AI coaching, nutrition, live coaches — all in one app.</p>
+  </div>
+  <div class="g3">
+    <div class="card card-hover" onclick="reqAuth()"><div style="width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:13px;background:var(--red4);border:1px solid var(--border)">📋</div><div class="display" style="font-size:19px;margin-bottom:8px;color:#fff">CUSTOM WORKOUT PLANS</div><p style="font-size:13px;line-height:1.65;color:var(--txt3)">Beginner, Intermediate & Advanced programs. Auto-adjusts to your BMI and experience.</p></div>
+    <div class="card card-hover" onclick="reqAuth()"><div style="width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:13px;background:var(--red4);border:1px solid var(--border)">🥗</div><div class="display" style="font-size:19px;margin-bottom:8px;color:#fff">SMART NUTRITION PLANS</div><p style="font-size:13px;line-height:1.65;color:var(--txt3)">Filipino-friendly meal plans with macro tracking, calorie targets, and food logging.</p></div>
+    <div class="card card-hover" onclick="reqAuth()"><div style="width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:13px;background:var(--red4);border:1px solid var(--border)">🤖</div><div class="display" style="font-size:19px;margin-bottom:8px;color:#fff">AI FITNESS ASSISTANT</div><p style="font-size:13px;line-height:1.65;color:var(--txt3)">Ask anything 24/7. Workout plans, diet advice, form tips. Powered by Claude AI.</p></div>
+    <div class="card card-hover" onclick="reqAuth()"><div style="width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:13px;background:var(--red4);border:1px solid var(--border)">👨‍🏫</div><div class="display" style="font-size:19px;margin-bottom:8px;color:#fff">LIVE ONLINE COACHES</div><p style="font-size:13px;line-height:1.65;color:var(--txt3)">Chat with certified PH trainers. Weekly check-ins, form reviews, custom adjustments.</p></div>
+    <div class="card card-hover" onclick="reqAuth()"><div style="width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:13px;background:var(--red4);border:1px solid var(--border)">📊</div><div class="display" style="font-size:19px;margin-bottom:8px;color:#fff">PROGRESS TRACKING</div><p style="font-size:13px;line-height:1.65;color:var(--txt3)">Track weight, BMI, body measurements, workout streaks, and visual progress charts.</p></div>
+    <div class="card card-hover" onclick="reqAuth()"><div style="width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:13px;background:var(--red4);border:1px solid var(--border)">💊</div><div class="display" style="font-size:19px;margin-bottom:8px;color:#fff">WEIGHT RECOMMENDATIONS</div><p style="font-size:13px;line-height:1.65;color:var(--txt3)">Every exercise includes personalised starting weights based on your BMI and experience.</p></div>
+  </div>
+</div></section>
+
+<!-- BMI CALCULATOR -->
+<section class="sec" id="bmi-calc"><div class="max">
+  <div class="g2" style="align-items:center;gap:40px">
+    <div>
+      <div class="sec-tag">🔢 FREE TOOL</div>
+      <div class="sec-title">BMI CALCULATOR</div>
+      <p class="sec-sub" style="margin-bottom:24px;color:var(--txt3)">Find your BMI and get instant personalised fitness recommendations. Always free.</p>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="lbl">Height (cm)</label><input class="inp" type="number" id="bmi-h" value="170" oninput="calcBMI()"></div>
+        <div><label class="lbl">Weight (kg)</label><input class="inp" type="number" id="bmi-w" value="70" oninput="calcBMI()"></div>
+        <div><label class="lbl">Age</label><input class="inp" type="number" id="bmi-age" value="22" oninput="calcBMI()"></div>
+        <div style="display:flex;gap:10px">
+          <div id="gen-m" onclick="pickGen('m')" style="flex:1;padding:12px;background:var(--red4);border:1.5px solid var(--red);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s"><div style="font-size:20px">♂</div><div style="font-size:12px;color:var(--red3);margin-top:2px;font-weight:700">MALE</div></div>
+          <div id="gen-f" onclick="pickGen('f')" style="flex:1;padding:12px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s"><div style="font-size:20px">♀</div><div style="font-size:12px;color:var(--txt3);margin-top:2px;font-weight:700">FEMALE</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:24px">
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:5px">YOUR BMI</div>
+        <div id="bmi-val" class="display" style="font-size:74px;color:var(--red);line-height:1">24.2</div>
+        <div id="bmi-lbl" class="badge badge-red mt8" style="font-size:13px;padding:6px 16px">Normal Weight</div>
+      </div>
+      <div class="bmi-meter"><div class="bmi-needle" id="bmi-needle" style="left:35%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt4);margin-bottom:14px"><span>Under</span><span>Normal</span><span>Over</span><span>Obese</span></div>
+      <div id="bmi-rec" class="card-red card" style="font-size:13px;color:var(--txt2);line-height:1.65;margin-bottom:13px">Your BMI is Normal. Focus on building lean muscle with progressive overload.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px">
+        <div class="stat-box" style="padding:11px"><div id="bmi-kcal" class="stat-num" style="font-size:20px">1,950</div><div class="stat-lbl">Daily Calories</div></div>
+        <div class="stat-box" style="padding:11px"><div id="bmi-prot" class="stat-num" style="font-size:20px">140g</div><div class="stat-lbl">Daily Protein</div></div>
+      </div>
+      <button class="btn btn-red btn-full" onclick="openAuth('signup')" style="font-size:15px">GET MY FULL PLAN →</button>
+    </div>
+  </div>
+</div></section>
+
+<!-- WORKOUTS PREVIEW -->
+<section class="sec" id="workouts" style="background:var(--bg2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)"><div class="max">
+  <div style="text-align:center;margin-bottom:34px">
+    <div class="sec-tag">💪 PROGRAMS</div>
+    <div class="sec-title">3-LEVEL WORKOUT <span class="text-red">PROGRAMS</span></div>
+    <p class="sec-sub" style="margin:0 auto">Beginner · Intermediate · Advanced. Each tailored to your BMI with personalised weight recommendations.</p>
+  </div>
+  <div class="g3" style="gap:13px;margin-bottom:24px">
+    <div class="card" style="border-color:rgba(74,222,128,0.3);background:rgba(34,197,94,0.06)"><div class="badge badge-green mb12">BEGINNER</div><div class="display" style="font-size:18px;color:#fff;margin-bottom:6px">3 Days / Week</div><p style="font-size:13px;color:var(--txt3)">Form focus, foundational movements, longer rest. 3 sets × 10–15 reps.</p></div>
+    <div class="card" style="border-color:rgba(249,115,22,0.3);background:rgba(249,115,22,0.06)"><div class="badge" style="background:rgba(249,115,22,0.15);color:#f97316;border:1px solid rgba(249,115,22,0.35)" class="mb12">INTERMEDIATE</div><div class="display" style="font-size:18px;color:#fff;margin-bottom:6px">4 Days / Week</div><p style="font-size:13px;color:var(--txt3)">Higher volume, push/pull split, 4–6 exercises. 4 sets × 8–12 reps.</p></div>
+    <div class="card" style="border-color:rgba(220,20,60,0.32);background:var(--red5)"><div class="badge badge-red mb12">ADVANCED</div><div class="display" style="font-size:18px;color:#fff;margin-bottom:6px">5 Days / Week</div><p style="font-size:13px;color:var(--txt3)">85–90% 1RM strength work, 5×5 compound lifts, advanced techniques.</p></div>
+  </div>
+  <div class="card" style="margin-bottom:24px">
+    <div class="row between wrap mb16">
+      <div>
+        <div style="font-size:11px;color:var(--red3);font-weight:700;letter-spacing:1px;margin-bottom:6px">▶ FORM LIBRARY</div>
+        <div class="display" style="font-size:28px;color:#fff">WORKOUT TUTORIALS & PROPER FORM</div>
+      </div>
+      <a class="btn btn-dark btn-sm" href="https://www.youtube.com/results?search_query=workout+proper+form+tutorials" target="_blank" rel="noopener noreferrer">OPEN YOUTUBE</a>
+    </div>
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-frame">
+          <iframe src="https://www.youtube-nocookie.com/embed/-i0wwCo_WiA?rel=0" title="Bench Press Proper Form" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-kicker">Bench Press</div>
+          <div class="video-title">Bench press proper form walkthrough</div>
+          <div class="video-copy">Quick chest-press demo for setup, bar path, and common beginner mistakes.</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-frame">
+          <iframe src="https://www.youtube-nocookie.com/embed/sbBxvzHwzFU?rel=0" title="Barbell Squat Proper Form" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-kicker">Barbell Squat</div>
+          <div class="video-title">Barbell squat form and depth guide</div>
+          <div class="video-copy">A lower-body form reference for stance, depth, knee tracking, and safe bracing.</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-frame">
+          <iframe src="https://www.youtube-nocookie.com/embed/_LhYspMFUmY?rel=0" title="Deadlift Proper Form" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-kicker">Deadlift</div>
+          <div class="video-title">Deadlift setup and pulling mechanics</div>
+          <div class="video-copy">Use this to review hinging, bar path, and back position before heavy pulling days.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center"><button class="btn btn-red" onclick="openAuth('signup')" style="font-size:16px;padding:13px 30px">ACCESS ALL PROGRAMS FREE →</button></div>
+</div></section>
+
+<!-- NUTRITION -->
+<section class="sec" id="nutrition"><div class="max">
+  <div style="text-align:center;margin-bottom:34px">
+    <div class="sec-tag">🥗 NUTRITION</div>
+    <div class="sec-title">EAT RIGHT. <span class="text-red">PERFORM BETTER.</span></div>
+    <p class="sec-sub" style="margin:0 auto">friendly meal plans. Hit your macros without giving up your favourite food.</p>
+  </div>
+  <div class="g2" style="gap:26px">
+    <div class="meal-day">
+      <div class="meal-hd" style="background:var(--red)">🌅 BREAKFAST — 520 kcal</div>
+      <div class="meal-row"><div class="meal-emoji">🥚</div><div style="flex:1"><div style="font-weight:700;font-size:13px;color:#fff">Scrambled Eggs + Oats</div><div style="font-size:11px;color:var(--txt3)">3 eggs · 80g oats · banana</div></div><div style="font-weight:700;font-size:13px;color:#fff;text-align:right;flex-shrink:0">38g<br><span style="font-size:10px;color:var(--txt3)">protein</span></div></div>
+      <div class="meal-hd" style="background:var(--bg4)">☀️ LUNCH — 620 kcal</div>
+      <div class="meal-row"><div class="meal-emoji">🍗</div><div style="flex:1"><div style="font-weight:700;font-size:13px;color:#fff">Grilled Chicken Rice Bowl</div><div style="font-size:11px;color:var(--txt3)">200g chicken · 150g rice · veggies</div></div><div style="font-weight:700;font-size:13px;color:#fff;text-align:right;flex-shrink:0">52g<br><span style="font-size:10px;color:var(--txt3)">protein</span></div></div>
+      <div style="position:relative"><div style="opacity:0.2;pointer-events:none"><div class="meal-hd" style="background:var(--bg5)">🌙 DINNER — 480 kcal</div><div class="meal-row"><div class="meal-emoji">🐟</div><div><div style="font-weight:700;font-size:13px;color:#fff">Baked Tilapia + Camote</div></div></div></div><div style="position:absolute;inset:0;background:rgba(8,0,0,0.8);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px"><span style="font-size:13px;color:var(--txt3);font-weight:600">🔒 Full plan with free account</span><button class="btn btn-red btn-sm" onclick="openAuth('signup')">SIGN UP FREE</button></div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="card card-red"><div style="font-size:11px;color:var(--red3);font-weight:700;letter-spacing:1px;margin-bottom:9px">💡 MACRO TARGETS</div><div style="display:flex;flex-direction:column;gap:8px"><div><div class="row between" style="font-size:13px;margin-bottom:3px"><span style="color:var(--red3);font-weight:700">Protein</span><span style="color:#fff;font-weight:700">150g / day</span></div><div class="prog-wrap"><div class="prog-fill" style="width:70%"></div></div></div><div><div class="row between" style="font-size:13px;margin-bottom:3px"><span style="color:#FF9B57;font-weight:700">Carbs</span><span style="color:#fff;font-weight:700">220g / day</span></div><div class="prog-wrap"><div class="prog-fill" style="width:85%;background:#FF9B57"></div></div></div><div><div class="row between" style="font-size:13px;margin-bottom:3px"><span style="color:#FFCF57;font-weight:700">Fat</span><span style="color:#fff;font-weight:700">55g / day</span></div><div class="prog-wrap"><div class="prog-fill" style="width:55%;background:#FFCF57"></div></div></div></div></div>
+      <div class="card"><div style="font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:9px">💡 PRO TIPS</div><div style="display:flex;flex-direction:column;gap:7px"><div style="font-size:13px;color:var(--txt2);display:flex;gap:8px"><span class="text-red">→</span>1g protein per lb of bodyweight daily</div><div style="font-size:13px;color:var(--txt2);display:flex;gap:8px"><span class="text-red">→</span>8+ glasses of water per day</div><div style="font-size:13px;color:var(--txt2);display:flex;gap:8px"><span class="text-red">→</span>Complex carbs before workouts</div><div style="font-size:13px;color:var(--txt2);display:flex;gap:8px"><span class="text-red">→</span>Protein within 30 min post-workout</div></div></div>
+      <button class="btn btn-red btn-full" onclick="openAuth('signup')" style="font-size:16px;padding:13px">GET MY CUSTOM MEAL PLAN →</button>
+    </div>
+  </div>
+</div></section>
+
+<!-- COACHES -->
+<section class="sec" id="coaches" style="background:var(--bg2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)"><div class="max">
+  <div style="text-align:center;margin-bottom:36px">
+    <div class="sec-tag">👨‍🏫 COACHING</div>
+    <div class="sec-title">REAL COACHES, <span class="text-red">REAL RESULTS</span></div>
+    <p class="sec-sub" style="margin:0 auto">Certified trainers. Direct messaging, check-ins, form reviews — Premium only.</p>
+  </div>
+  <div class="g3">
+    <div class="coach-card"><div class="coach-ava">👨<div style="position:absolute;top:9px;right:9px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700">🟢 Online</div></div><div style="padding:15px"><div class="row between mb8"><div><div class="display" style="font-size:18px;color:#fff">COACH MARCUS R.</div><div style="font-size:11px;color:var(--txt3)">Strength & Hypertrophy</div></div><div class="badge badge-red">★ 4.9</div></div><p style="font-size:13px;color:var(--txt3);line-height:1.6;margin-bottom:12px">"Progressive overload and consistency — that's the formula for beginners."</p><button class="btn btn-red btn-full btn-sm" onclick="reqAuth('coach')">BOOK SESSION</button></div></div>
+    <div class="coach-card"><div class="coach-ava">👩<div style="position:absolute;top:9px;right:9px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700">🟢 Online</div></div><div style="padding:15px"><div class="row between mb8"><div><div class="display" style="font-size:18px;color:#fff">COACH ALYSSA M.</div><div style="font-size:11px;color:var(--txt3)">Weight Loss & HIIT</div></div><div class="badge badge-red">★ 4.8</div></div><p style="font-size:13px;color:var(--txt3);line-height:1.6;margin-bottom:12px">"The right plan makes fat loss sustainable. No shortcuts, just smart strategy."</p><button class="btn btn-red btn-full btn-sm" onclick="reqAuth('coach')">BOOK SESSION</button></div></div>
+    <div class="coach-card"><div class="coach-ava">👨‍🦱<div style="position:absolute;top:9px;right:9px;background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.4);color:#EAB308;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700">🟡 Busy</div></div><div style="padding:15px"><div class="row between mb8"><div><div class="display" style="font-size:18px;color:#fff">COACH RICO P.</div><div style="font-size:11px;color:var(--txt3)">Nutrition & Recomp</div></div><div class="badge badge-red">★ 5.0</div></div><p style="font-size:13px;color:var(--txt3);line-height:1.6;margin-bottom:12px">"Filipino food IS healthy when you know how to use it for your goals."</p><button class="btn btn-dark btn-full btn-sm" onclick="reqAuth('coach')">SCHEDULE →</button></div></div>
+  </div>
+</div></section>
+
+<!-- AI SECTION -->
+<section class="sec" id="ai-sec"><div class="max">
+  <div style="text-align:center;margin-bottom:34px">
+    <div class="sec-tag">🤖 AI POWERED</div>
+    <div class="sec-title">YOUR 24/7 <span class="text-red">AI FITNESS COACH</span></div>
+    <p class="sec-sub" style="margin:0 auto">Ask anything. Workout plans, diet, BMI. Powered by Claude AI. Free: 3 questions/day.</p>
+  </div>
+  <div class="g2" style="gap:26px;align-items:start">
+    <div class="chat-box" style="height:480px">
+      <div class="chat-hd"><div style="width:34px;height:34px;background:var(--red4);border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🤖</div><div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.5px;color:#fff">GYMFIT PH AI COACH</div><div style="font-size:11px;color:var(--red3)" id="ai-lbl">🟢 Online · Free: 3 questions/day</div></div></div>
+      <div class="chips"><div class="chip" onclick="sendQ('Create a beginner workout plan for 1 month')">📅 Month Plan</div><div class="chip" onclick="sendQ('Give me a 7-day Filipino meal plan for muscle gain')">🥗 Meal Plan</div><div class="chip" onclick="sendQ('Best exercises to burn fat fast?')">🔥 Fat Loss</div><div class="chip" onclick="sendQ('How to build muscle as a beginner?')">💪 Muscle</div><div class="chip" onclick="sendQ('What supplements should I take?')">💊 Supps</div></div>
+      <div class="chat-log" id="ai-log"><div class="bubble bubble-ai"><div style="font-weight:700;color:var(--red3);margin-bottom:4px;font-size:11px">🤖 GYMFIT PH AI</div>Hey! I'm your AI fitness coach. Ask me anything about workouts, nutrition, or your BMI!<br><br><span style="font-size:11px;color:var(--txt4)">Free: 3 questions/day · Premium: unlimited</span></div></div>
+      <div id="ai-typing" style="padding:5px 12px;display:none"><div style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:9px 13px;display:inline-flex;gap:4px"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+      <div class="chat-inp-row">
+        <textarea id="ai-inp" placeholder="Ask about workouts, diet, BMI..." style="flex:1;padding:8px 12px;background:var(--bg4);border:1.5px solid var(--border2);border-radius:11px;font-family:'Barlow',sans-serif;font-size:13px;color:#fff;outline:none;resize:none;min-height:38px;max-height:76px;line-height:1.4;transition:border-color 0.2s" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI('ai-inp','ai-log','ai-typing')}" oninput="autoH(this)"></textarea>
+        <button onclick="sendAI('ai-inp','ai-log','ai-typing')" style="width:38px;height:38px;background:var(--red);border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:background 0.18s">➤</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div class="display" style="font-size:26px;color:#fff">WHAT AI CAN DO</div>
+      <div class="card" style="display:flex;gap:11px;align-items:flex-start;padding:14px"><span style="font-size:20px;flex-shrink:0">📅</span><div><div style="font-weight:700;margin-bottom:2px;font-size:14px;color:#fff">Monthly Workout Plans</div><div style="font-size:13px;color:var(--txt3)">Full 4-week program with daily workouts, sets, reps</div></div></div>
+      <div class="card" style="display:flex;gap:11px;align-items:flex-start;padding:14px"><span style="font-size:20px;flex-shrink:0">🥗</span><div><div style="font-weight:700;margin-bottom:2px;font-size:14px;color:#fff">Custom Nutrition Plans</div><div style="font-size:13px;color:var(--txt3)">7-day Filipino meal plans with macros & calories</div></div></div>
+      <div class="card" style="display:flex;gap:11px;align-items:flex-start;padding:14px"><span style="font-size:20px;flex-shrink:0">🔢</span><div><div style="font-weight:700;margin-bottom:2px;font-size:14px;color:#fff">Calorie & Macro Calculator</div><div style="font-size:13px;color:var(--txt3)">Exact daily targets for your body type and goal</div></div></div>
+      <div class="card" style="display:flex;gap:11px;align-items:flex-start;padding:14px"><span style="font-size:20px;flex-shrink:0">💊</span><div><div style="font-weight:700;margin-bottom:2px;font-size:14px;color:#fff">Supplement Guidance</div><div style="font-size:13px;color:var(--txt3)">What to take, when, and how much for your goal</div></div></div>
+      <div class="card-red card" style="padding:13px"><div style="font-size:13px;color:var(--txt2)"><strong style="color:var(--red3)">Free:</strong> 3 AI questions per day<br><strong style="color:var(--red3)">Premium (₱99/mo):</strong> Unlimited AI + coach access</div><button class="btn btn-red mt12 btn-full" onclick="openAuth('signup')" style="font-size:14px">UNLOCK UNLIMITED →</button></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- PRICING -->
+<section class="sec" id="pricing" style="background:var(--bg2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)"><div class="max">
+  <div style="text-align:center;margin-bottom:40px">
+    <div class="sec-tag">💰 PRICING</div>
+    <div class="sec-title">SIMPLE, <span class="text-red">AFFORDABLE PLANS</span></div>
+    <p class="sec-sub" style="margin:0 auto">Start free. Upgrade when ready. No hidden fees.</p>
+  </div>
+  <div class="g3" style="max-width:820px;margin:0 auto 28px">
+    <div class="price-card"><div style="font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:6px">FREE TRIAL</div><div class="price-amount" style="font-size:48px">₱0</div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px">/forever</div><ul class="price-list"><li>BMI Calculator</li><li>Day 1–2 workouts</li><li>Sample meal plan</li><li>3 AI questions/day</li><li class="off">Full programs</li><li class="off">Unlimited AI</li><li class="off">Online coaches</li></ul><button class="btn btn-dark btn-full" onclick="openAuth('signup')" style="font-size:14px">START FREE →</button></div>
+    <div class="price-card featured"><div class="price-badge">MOST POPULAR</div><div style="font-size:11px;color:var(--red3);font-weight:700;letter-spacing:1px;margin-bottom:6px;margin-top:9px">PREMIUM MONTHLY</div><div class="price-amount">₱99</div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px">/month</div><ul class="price-list"><li>All 3 programs</li><li>Custom meal plans</li><li>Unlimited AI Coach</li><li>Online coach access</li><li>Progress tracking</li><li>Weight recommendations</li><li>Supplement guide</li></ul><button class="btn btn-red btn-full glow" onclick="openSubscribe('monthly')" style="font-size:15px">SUBSCRIBE ₱99/MO →</button></div>
+    <div class="price-card"><div style="font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:6px">PREMIUM ANNUAL</div><div style="display:flex;align-items:baseline;gap:7px"><div class="price-amount">₱799</div><div style="font-size:13px;color:var(--txt4);text-decoration:line-through">₱1,188</div></div><div style="font-size:12px;color:var(--txt3);margin-bottom:6px">/year · save 33%</div><div class="badge badge-red mb12">₱66/month</div><ul class="price-list"><li>Everything in Monthly</li><li>Priority coach matching</li><li>Advanced analytics</li><li>Annual progress report</li><li>VIP support</li></ul><button class="btn btn-ghost btn-full" onclick="openSubscribe('annual')" style="font-size:14px">GET ANNUAL →</button></div>
+  </div>
+  <div style="text-align:center;font-size:12px;color:var(--txt4)">🔒 GCash · Maya · Visa · Mastercard · No hidden fees</div>
+</div></section>
+
+<!-- TESTIMONIALS -->
+<section class="sec" id="testimonials"><div class="max">
+  <div style="text-align:center;margin-bottom:34px"><div class="sec-tag">⭐ REVIEWS</div><div class="sec-title">REAL RESULTS FROM <span class="text-red">REAL MEMBERS</span></div></div>
+  <div class="g3">
+    <div class="card"><div style="color:var(--red);font-size:14px;margin-bottom:10px">★★★★★</div><p style="font-size:13px;color:var(--txt2);line-height:1.7">"Lost 5kg in 6 weeks. The AI coach answered every question at 2am. Best ₱99 I ever spent."</p><div class="row mt12 gap8"><div style="width:40px;height:40px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid var(--border)">👨</div><div><div style="font-weight:700;font-size:13px;color:#fff">Jayson R.</div><div style="font-size:11px;color:var(--txt3)">Lost 5kg · Taguig</div></div></div></div>
+    <div class="card"><div style="color:var(--red);font-size:14px;margin-bottom:10px">★★★★★</div><p style="font-size:13px;color:var(--txt2);line-height:1.7">"The meal plan uses actual Filipino food. Finally eating healthy without giving up my culture."</p><div class="row mt12 gap8"><div style="width:40px;height:40px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid var(--border)">👩</div><div><div style="font-weight:700;font-size:13px;color:#fff">Maria C.</div><div style="font-size:11px;color:var(--txt3)">8-week program · Cebu</div></div></div></div>
+    <div class="card"><div style="color:var(--red);font-size:14px;margin-bottom:10px">★★★★★</div><p style="font-size:13px;color:var(--txt2);line-height:1.7">"The weight recommendations are spot-on. Hit my first 100kg squat after 3 months!"</p><div class="row mt12 gap8"><div style="width:40px;height:40px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid var(--border)">👨</div><div><div style="font-weight:700;font-size:13px;color:#fff">Carlo M.</div><div style="font-size:11px;color:var(--txt3)">Gained 4kg muscle · Manila</div></div></div></div>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="sec-sm" style="background:var(--bg2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)" id="faq"><div class="max">
+  <div class="g2" style="gap:40px;align-items:start">
+    <div><div class="sec-tag">❓ FAQ</div><div class="sec-title">COMMON <span class="text-red">QUESTIONS</span></div><button class="btn btn-red mt20" onclick="openAuth('signup')" style="font-size:15px;padding:12px 26px">START FREE →</button></div>
+    <div>
+      <div class="faq-item"><button class="faq-q" onclick="faqToggle(this)">Is the free trial actually free?<span class="faq-icon">+</span></button><div class="faq-a">Yes! Sign up with email and password — no credit card needed. You get limited access: BMI calculator, Day 1–2 workouts, sample meal plan, 3 AI questions per day.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="faqToggle(this)">How does the subscription work?<span class="faq-icon">+</span></button><div class="faq-a">Create a free account first, then go to Settings → Subscription to upgrade. Premium unlocks everything instantly.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="faqToggle(this)">Do I need a gym membership?<span class="faq-icon">+</span></button><div class="faq-a">No! Many programs work with minimal equipment or bodyweight only. We have home and gym programs available.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="faqToggle(this)">How are workout weights calculated?<span class="faq-icon">+</span></button><div class="faq-a">Weights are calculated from your bodyweight (logged in BMI Tracker), your BMI category, and your experience level. Overweight/obese users get reduced starting weights on lower-body exercises for safety.</div></div>
+      <div class="faq-item" style="border-bottom:none"><button class="faq-q" onclick="faqToggle(this)">What payment methods are accepted?<span class="faq-icon">+</span></button><div class="faq-a">GCash, Maya, credit/debit cards (Visa/Mastercard), and bank transfer. All payments are secure.</div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section class="sec" style="text-align:center;position:relative;overflow:hidden">
+  <div class="gym-pattern"></div>
+  <div style="position:absolute;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(220,20,60,0.18) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none"></div>
+  <div class="max" style="position:relative;z-index:1">
+    <div class="display" style="font-size:clamp(36px,7vw,82px);line-height:0.95;margin-bottom:16px;color:#fff">STOP WAITING.<br><span class="text-red">START TODAY.</span></div>
+    <p style="font-size:16px;color:var(--txt3);max-width:440px;margin:0 auto 32px;line-height:1.65">Join 50,000+ who took control of their fitness.</p>
+    <button class="btn-hero btn-hero-red glow" style="font-size:19px;padding:17px 42px" onclick="openAuth('signup')">START FREE TRIAL →</button>
+    <div style="margin-top:14px;font-size:12px;color:var(--txt4)">7-day free trial · No credit card · Cancel anytime</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer><div class="max">
+  <div class="foot-grid">
+    <div><div class="row gap8 mb12"><div style="width:32px;height:32px;background:var(--red);border-radius:9px;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 80 30"><rect x="0" y="9" width="11" height="12" rx="3" fill="white"/><rect x="11" y="4" width="7" height="22" rx="3" fill="white"/><rect x="18" y="12" width="44" height="6" rx="3" fill="white"/><rect x="62" y="4" width="7" height="22" rx="3" fill="white"/><rect x="69" y="9" width="11" height="12" rx="3" fill="white"/></svg></div><div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;color:#fff">GYMFIT</div></div><p style="font-size:13px;color:var(--txt3);line-height:1.7;max-width:230px;margin-bottom:13px">#1 Fitness App in the Philippines. Build your best body for ₱99/month.</p><div class="row gap8"><div class="social-btn">📘</div><div class="social-btn">📷</div><div class="social-btn">🎵</div><div class="social-btn">▶️</div></div></div>
+    <div><div class="display" style="font-size:15px;margin-bottom:11px;color:#fff">FEATURES</div><span class="foot-link" onclick="scr('workouts')">Workout Programs</span><span class="foot-link" onclick="scr('nutrition')">Nutrition Plans</span><span class="foot-link" onclick="scr('ai-sec')">AI Coach</span><span class="foot-link" onclick="scr('coaches')">Online Coaches</span><span class="foot-link" onclick="scr('pricing')">Pricing</span></div>
+    <div><div class="display" style="font-size:15px;margin-bottom:11px;color:#fff">ACCOUNT</div><span class="foot-link" onclick="openAuth('login')">Log In</span><span class="foot-link" onclick="openAuth('signup')">Sign Up Free</span><span class="foot-link" onclick="openSubscribe('monthly')">Subscribe Premium</span><span class="foot-link" onclick="goDb()">My Dashboard</span></div>
+    <div><div class="display" style="font-size:15px;margin-bottom:11px;color:#fff">SUPPORT</div><span class="foot-link" onclick="scr('faq')">FAQ</span><span class="foot-link" onclick="toast('Email: support@gymfit.ph','info')">Contact Us</span><span class="foot-link" onclick="toast('Privacy Policy — PDPA compliant','info')">Privacy Policy</span><span class="foot-link" onclick="toast('Terms of Service available on request','info')">Terms of Service</span></div>
+  </div>
+  <div style="border-top:1px solid var(--border2);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px"><div style="font-size:12px;color:var(--txt4)">© 2025 GymFit PH. Made with ❤️ in the Philippines.</div><div style="font-size:12px;color:var(--txt4)">🔒 GCash · Maya · Visa · Mastercard</div></div>
+</div></footer>
+
+</div><!-- /land -->
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-bot-nav" id="mbn">
+  <button class="mbn-item on" onclick="goLand();mbnActive(this)"><span class="mbn-icon">🏠</span><span class="mbn-lbl">HOME</span></button>
+  <button class="mbn-item" onclick="goLand();scr('workouts');mbnActive(this)"><span class="mbn-icon">🏋️</span><span class="mbn-lbl">WORKOUT</span></button>
+  <button class="mbn-item" onclick="goLand();scr('nutrition');mbnActive(this)"><span class="mbn-icon">🥗</span><span class="mbn-lbl">DIET</span></button>
+  <button class="mbn-item" onclick="goLand();scr('ai-sec');mbnActive(this)"><span class="mbn-icon">🤖</span><span class="mbn-lbl">AI</span></button>
+  <button class="mbn-item" onclick="openAuth('signup')"><span class="mbn-icon">⚡</span><span class="mbn-lbl">JOIN</span></button>
+</nav>
+
+<!-- ============================================================
+     AUTH MODAL
+============================================================ -->
+<div class="overlay" id="auth-modal" onclick="if(event.target.id==='auth-modal')closeModal('auth-modal')">
+<div class="modal" onclick="event.stopPropagation()">
+  <div class="modal-hd">
+    <div><div class="display" style="font-size:24px;color:#fff" id="auth-title">WELCOME BACK</div><div style="font-size:12px;color:var(--txt3);margin-top:2px" id="auth-sub">Log in to your account</div></div>
+    <button class="modal-x" onclick="closeModal('auth-modal')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="auth-tabs"><button class="auth-tab" id="tab-li" onclick="switchTab('login')">LOG IN</button><button class="auth-tab on" id="tab-su" onclick="switchTab('signup')">SIGN UP FREE</button></div>
+    <!-- LOGIN -->
+    <div id="f-login" style="display:none;flex-direction:column;gap:13px">
+      <div><label class="lbl">Email Address</label><input class="inp" type="email" id="li-email" placeholder="your@email.com" autocomplete="email"><div class="inp-err" id="li-email-err">Please enter a valid email address</div></div>
+      <div><label class="lbl">Password</label><div class="inp-wrap"><input class="inp" type="password" id="li-pw" placeholder="Your password" autocomplete="current-password" style="padding-right:42px"><span class="inp-eye" onclick="eyeToggle('li-pw',this)">👁</span></div><div class="inp-err" id="li-pw-err">Password is required</div></div>
+      <div style="display:flex;justify-content:flex-end"><button style="background:none;border:none;color:var(--red3);font-size:12px;cursor:pointer;font-weight:700;padding:0" onclick="switchTab('forgot')">Forgot password?</button></div>
+      <button class="btn btn-red btn-full" onclick="doLogin()" style="font-size:16px;padding:13px">LOG IN →</button>
+      <div class="sep"></div>
+      <div style="text-align:center;font-size:13px;color:var(--txt3)">No account? <button style="background:none;border:none;color:var(--red3);font-weight:700;cursor:pointer;font-size:13px;padding:0" onclick="switchTab('signup')">Sign up free</button></div>
+    </div>
+    <!-- SIGNUP -->
+    <div id="f-signup" style="display:flex;flex-direction:column;gap:12px">
+      <div><label class="lbl mb8">Choose Your Plan</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px" id="plan-opts">
+          <div class="plan-opt on" id="pl-free" onclick="pickPlan('free',this)"><div class="display" style="font-size:17px;color:var(--red)">FREE</div><div style="font-size:10px;color:var(--txt3);margin-top:1px">7-day trial</div></div>
+          <div class="plan-opt" id="pl-monthly" onclick="pickPlan('monthly',this)" style="position:relative"><div class="plan-badge-top">POPULAR</div><div class="display" style="font-size:17px;color:var(--red)">₱99</div><div style="font-size:10px;color:var(--txt3);margin-top:1px">/month</div></div>
+          <div class="plan-opt" id="pl-annual" onclick="pickPlan('annual',this)"><div class="display" style="font-size:17px;color:var(--red)">₱799</div><div style="font-size:10px;color:var(--txt3);margin-top:1px">/year</div></div>
+        </div>
+      </div>
+      <div><label class="lbl">Full Name</label><input class="inp" type="text" id="su-name" placeholder="Juan dela Cruz" autocomplete="name"><div class="inp-err" id="su-name-err">Full name is required</div></div>
+      <div><label class="lbl">Email Address</label><input class="inp" type="email" id="su-email" placeholder="your@email.com" autocomplete="email"><div class="inp-err" id="su-email-err">Please enter a valid email</div></div>
+      <div><label class="lbl">Password</label><div class="inp-wrap"><input class="inp" type="password" id="su-pw" placeholder="Min 8 characters" autocomplete="new-password" style="padding-right:42px" oninput="pwStrength(this)"><span class="inp-eye" onclick="eyeToggle('su-pw',this)">👁</span></div><div class="pw-bar" id="pw-bar"></div><div style="font-size:11px;color:var(--txt3);margin-top:3px" id="pw-hint">Enter a password</div><div class="inp-err" id="su-pw-err">Password must be at least 8 characters</div></div>
+      <div><label class="lbl">Your Main Goal</label><select class="inp" id="su-goal"><option value="">Select your goal...</option><option value="lose">Lose Weight</option><option value="muscle">Build Muscle</option><option value="fit">Get Fit &amp; Toned</option><option value="maintain">Maintain Health</option></select></div>
+      <div><label class="lbl">Experience Level</label><select class="inp" id="su-exp"><option value="">Select your experience...</option><option value="beginner">Beginner (0–6 months)</option><option value="intermediate">Intermediate (6mo–2 years)</option><option value="advanced">Advanced (2+ years)</option></select></div>
+      <div class="row" style="align-items:flex-start;gap:9px;margin-top:1px"><input type="checkbox" id="terms" style="width:15px;height:15px;margin-top:2px;accent-color:var(--red);flex-shrink:0;cursor:pointer"><label for="terms" style="font-size:12px;color:var(--txt3);cursor:pointer;line-height:1.5">I agree to the <span style="color:var(--red3)">Terms of Service</span> and <span style="color:var(--red3)">Privacy Policy</span></label></div>
+      <div class="inp-err" id="terms-err" style="margin-top:-4px">Please accept the terms</div>
+      <button class="btn btn-red btn-full" id="su-btn" onclick="doSignup()" style="font-size:16px;padding:13px;margin-top:1px">VERIFY EMAIL &amp; CREATE ACCOUNT →</button>
+      <div id="su-otp-wrap" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px">
+        <div style="font-size:10px;color:var(--red3);font-weight:700;letter-spacing:1px;margin-bottom:6px">EMAIL VERIFICATION</div>
+        <div style="font-size:13px;color:var(--txt2);line-height:1.6;margin-bottom:11px" id="su-otp-help">Enter the 6-digit code sent to <strong style="color:#fff" id="su-otp-email">your@email.com</strong>.</div>
+        <div><label class="lbl">Authentication Code</label><input class="inp" type="text" id="su-otp" placeholder="Enter 6-digit code" inputmode="numeric" maxlength="6" autocomplete="one-time-code"><div class="inp-err" id="su-otp-err">Enter the 6-digit code from your email</div></div>
+        <div style="font-size:11px;color:var(--txt4);margin-top:6px" id="su-otp-note">Codes expire in 5 minutes.</div>
+        <div id="su-otp-status" style="display:none;margin-top:10px;padding:12px;border-radius:12px;border:1px solid rgba(220,20,60,0.28);background:rgba(220,20,60,0.1);font-size:12px;color:var(--txt2);line-height:1.6"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn btn-red btn-sm" onclick="verifySignupOTP()" style="font-size:13px;padding:10px 16px">VERIFY &amp; CREATE ACCOUNT →</button>
+          <button class="btn btn-dark btn-sm" onclick="resendSignupOTP()" style="font-size:13px;padding:10px 16px">RESEND CODE</button>
+          <button class="btn btn-ghost btn-sm" onclick="editSignupEmail()" style="font-size:13px;padding:10px 16px">CHANGE EMAIL</button>
+        </div>
+      </div>
+      <div class="sep"></div>
+      <div style="text-align:center;font-size:13px;color:var(--txt3)">Already have an account? <button style="background:none;border:none;color:var(--red3);font-weight:700;cursor:pointer;font-size:13px;padding:0" onclick="switchTab('login')">Log in here</button></div>
+    </div>
+    <!-- FORGOT -->
+    <div id="f-forgot" style="display:none;flex-direction:column;gap:13px">
+      <p style="font-size:13px;color:var(--txt3)">Enter your registered email and we'll send you a password reset link.</p>
+      <div><label class="lbl">Email Address</label><input class="inp" type="email" id="fg-email" placeholder="your@email.com"><div class="inp-err" id="fg-err">Please enter a valid email</div></div>
+      <button class="btn btn-red btn-full" onclick="doForgot()" style="font-size:16px;padding:13px">SEND RESET LINK →</button>
+      <button style="background:none;border:none;color:var(--txt3);font-size:13px;cursor:pointer;text-align:center;padding:0" onclick="switchTab('login')">← Back to login</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================
+     SUBSCRIBE MODAL
+============================================================ -->
+<div class="overlay" id="sub-modal" onclick="if(event.target.id==='sub-modal')closeModal('sub-modal')">
+<div class="modal" onclick="event.stopPropagation()" style="max-width:480px">
+  <div class="modal-hd">
+    <div><div class="display" style="font-size:24px;color:#fff">UPGRADE TO PREMIUM</div><div style="font-size:12px;color:var(--txt3);margin-top:2px">Unlock everything in GymFit PH</div></div>
+    <button class="modal-x" onclick="closeModal('sub-modal')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div id="sub-plan-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      <div id="sub-monthly-opt" class="plan-opt on" onclick="pickSubPlan('monthly',this)" style="padding:15px 10px">
+        <div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:3px">MONTHLY</div>
+        <div class="display" style="font-size:32px;color:var(--red)">₱99</div>
+        <div style="font-size:11px;color:var(--txt3)">per month</div>
+      </div>
+      <div id="sub-annual-opt" class="plan-opt" onclick="pickSubPlan('annual',this)" style="padding:15px 10px;position:relative">
+        <div class="plan-badge-top" style="background:var(--green)">SAVE 33%</div>
+        <div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:3px;margin-top:4px">ANNUAL</div>
+        <div class="display" style="font-size:32px;color:var(--red)">₱799</div>
+        <div style="font-size:11px;color:var(--txt3)">per year</div>
+        <div style="font-size:12px;color:#4ade80;margin-top:5px;font-weight:700">₱66/month</div>
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:9px">PAYMENT METHOD</div>
+      <div id="pay-method-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div id="pay-gcash" class="plan-opt on" onclick="pickPay('gcash',this)" style="padding:10px;text-align:center"><div style="font-size:18px">📱</div><div style="font-size:11px;font-weight:700;color:var(--txt2);margin-top:3px">GCash</div></div>
+        <div id="pay-maya" class="plan-opt" onclick="pickPay('maya',this)" style="padding:10px;text-align:center"><div style="font-size:18px">💳</div><div style="font-size:11px;font-weight:700;color:var(--txt2);margin-top:3px">Maya</div></div>
+        <div id="pay-card" class="plan-opt" onclick="pickPay('card',this)" style="padding:10px;text-align:center"><div style="font-size:18px">🏦</div><div style="font-size:11px;font-weight:700;color:var(--txt2);margin-top:3px">Credit/Debit</div></div>
+        <div id="pay-bank" class="plan-opt" onclick="pickPay('bank',this)" style="padding:10px;text-align:center"><div style="font-size:18px">🏧</div><div style="font-size:11px;font-weight:700;color:var(--txt2);margin-top:3px">Bank Transfer</div></div>
+      </div>
+      <div id="pay-detail" style="background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:13px;font-size:13px;color:var(--txt2);min-height:54px"></div>
+      <div id="pay-fields" style="display:flex;flex-direction:column;gap:10px;margin-top:12px"></div>
+      <div class="inp-err" id="pay-field-err" style="display:none;margin-top:8px">Please complete the payment details first.</div>
+      <label for="pay-confirm" style="display:flex;align-items:flex-start;gap:9px;margin-top:12px;cursor:pointer">
+        <input type="checkbox" id="pay-confirm" style="width:15px;height:15px;margin-top:2px;accent-color:var(--red);flex-shrink:0;cursor:pointer">
+        <span id="pay-confirm-text" style="font-size:12px;color:var(--txt3);line-height:1.5">I confirm I completed this payment and want to activate my subscription.</span>
+      </label>
+      <div class="inp-err" id="pay-confirm-err" style="margin-top:-4px">Please confirm the payment step to continue.</div>
+    </div>
+    <div id="sub-msg" style="text-align:center;font-size:12px;color:var(--txt4);margin-bottom:12px">You must be logged in. <button style="background:none;border:none;color:var(--red3);cursor:pointer;font-weight:700;font-size:12px;padding:0" onclick="closeModal('sub-modal');openAuth('login')">Log in first</button></div>
+    <div id="sub-summary" style="background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:13px;font-size:13px;color:var(--txt2);margin-bottom:12px"></div>
+    <button class="btn btn-red btn-full" id="sub-btn" onclick="doSubscribe()" style="font-size:17px;padding:14px">SUBSCRIBE NOW →</button>
+    <div style="text-align:center;font-size:11px;color:var(--txt4);margin-top:10px">🔒 Secure payment · Cancel anytime · Instant activation</div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================
+     PROGRAM DECISION MODAL
+============================================================ -->
+<div class="overlay" id="program-modal" onclick="if(event.target.id==='program-modal')closeModal('program-modal')">
+<div class="modal" onclick="event.stopPropagation()" style="max-width:520px">
+  <div class="modal-hd">
+    <div><div class="display" style="font-size:24px;color:#fff">PROGRAM COMPLETE</div><div style="font-size:12px;color:var(--txt3);margin-top:2px">Choose what happens next in your workout cycle</div></div>
+    <button class="modal-x" onclick="closeModal('program-modal')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="card-red card" style="margin-bottom:14px">
+      <div style="font-size:10px;color:var(--red3);font-weight:700;letter-spacing:1px;margin-bottom:6px">CYCLE SUMMARY</div>
+      <div style="font-size:14px;color:#fff;font-weight:700;margin-bottom:4px" id="program-modal-title">You finished your plan.</div>
+      <div style="font-size:13px;color:var(--txt2);line-height:1.6" id="program-modal-summary">We'll save your finished cycle and prepare your next one.</div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:6px">RECOMMENDED NEXT STEP</div>
+      <div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:4px" id="program-modal-recommendation">Stay on your current program</div>
+      <div style="font-size:13px;color:var(--txt3);line-height:1.6" id="program-modal-reason">We'll suggest the best option based on your progress.</div>
+    </div>
+    <div id="program-actions" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-dark" id="program-stay-btn" onclick="chooseProgramPath('stay')" style="flex:1;min-width:180px;font-size:14px;padding:12px 16px">STICK WITH CURRENT PROGRAM</button>
+      <button class="btn btn-red" id="program-switch-btn" onclick="chooseProgramPath('switch')" style="flex:1;min-width:180px;font-size:14px;padding:12px 16px">START RECOMMENDED PROGRAM →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================
+     FOOD PICKER MODAL
+============================================================ -->
+<div class="overlay" id="food-modal" onclick="if(event.target.id==='food-modal')closeModal('food-modal')">
+<div class="modal" onclick="event.stopPropagation()" style="max-width:520px;display:flex;flex-direction:column;max-height:92vh">
+  <div class="modal-hd" style="flex-shrink:0">
+    <div><div class="display" style="font-size:22px;color:#fff">ADD FOOD</div><div style="font-size:12px;color:var(--txt3);margin-top:2px" id="food-modal-sub">Select foods to log</div></div>
+    <button class="modal-x" onclick="closeModal('food-modal')">✕</button>
+  </div>
+  <div class="modal-body" style="padding-top:14px;display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+    <input class="inp" id="food-search" placeholder="🔍 Search food by name..." oninput="filterFoods(this.value)" style="margin-bottom:10px;flex-shrink:0">
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;flex-shrink:0" id="food-cat-tabs">
+      <button class="pill on" onclick="filterByCat('all',this)" style="font-size:11px;padding:5px 11px">All</button>
+      <button class="pill" onclick="filterByCat('🍚 Filipino Staples',this)" style="font-size:11px;padding:5px 11px">🍚 Staples</button>
+      <button class="pill" onclick="filterByCat('🍗 Proteins',this)" style="font-size:11px;padding:5px 11px">🍗 Protein</button>
+      <button class="pill" onclick="filterByCat('🥦 Vegetables',this)" style="font-size:11px;padding:5px 11px">🥦 Veggies</button>
+      <button class="pill" onclick="filterByCat('🍌 Fruits',this)" style="font-size:11px;padding:5px 11px">🍌 Fruits</button>
+      <button class="pill" onclick="filterByCat('🥛 Drinks & Dairy',this)" style="font-size:11px;padding:5px 11px">🥛 Drinks</button>
+      <button class="pill" onclick="filterByCat('🍿 Snacks',this)" style="font-size:11px;padding:5px 11px">🍿 Snacks</button>
+      <button class="pill" onclick="filterByCat('🏋️ Workout Fuel',this)" style="font-size:11px;padding:5px 11px">🏋️ Fuel</button>
+    </div>
+    <div id="food-list" style="flex:1;overflow-y:auto;border-radius:12px;border:1px solid var(--border2);min-height:0;position:relative"></div>
+    <div style="text-align:center;font-size:11px;color:var(--txt4);margin-top:6px;flex-shrink:0">↕ Scroll to see more foods</div>
+    <button class="btn btn-red btn-full mt8" onclick="closeModal('food-modal')" style="font-size:15px;flex-shrink:0">DONE ADDING</button>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================
+     DASHBOARD
+============================================================ -->
+<div id="db" style="display:none;padding-top:var(--nav-h)">
+<!-- Dashboard HTML is injected dynamically via dashboard.js -->
+<!-- See the full dashboard structure below -->
+<div class="db-grid">
+
+  <!-- SIDEBAR (desktop) -->
+  <aside class="db-side">
+    <div style="padding:14px 16px 10px;border-bottom:1px solid var(--border2);margin-bottom:7px">
+      <div class="row gap8"><div style="width:42px;height:42px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;color:#fff" id="db-ava">A</div><div><div style="font-weight:700;font-size:14px;color:#fff" id="db-uname2">Alex</div><div id="db-plan-badge" style="margin-top:3px"></div></div></div>
+    </div>
+    <button class="sb-link on" id="sb-home" onclick="showPanel('home')"><span class="sb-icon">🏠</span>Dashboard</button>
+    <button class="sb-link" id="sb-workout" onclick="showPanel('workout')"><span class="sb-icon">🏋️</span>Workouts</button>
+    <button class="sb-link" id="sb-nutrition" onclick="showPanel('nutrition')"><span class="sb-icon">🥗</span>Nutrition</button>
+    <button class="sb-link" id="sb-ai" onclick="showPanel('ai')"><span class="sb-icon">🤖</span>AI Coach</button>
+    <button class="sb-link" id="sb-coach" onclick="showPanel('coach')"><span class="sb-icon">👨‍🏫</span>Online Coaches</button>
+    <button class="sb-link" id="sb-progress" onclick="showPanel('progress')"><span class="sb-icon">📊</span>Progress</button>
+    <button class="sb-link" id="sb-bmi" onclick="showPanel('bmi')"><span class="sb-icon">🔢</span>BMI Tracker</button>
+    <button class="sb-link" id="sb-supplement" onclick="showPanel('supplement')"><span class="sb-icon">💊</span>Supplements</button>
+    <button class="sb-link" id="sb-settings" onclick="showPanel('settings')"><span class="sb-icon">⚙️</span>Settings</button>
+    <div style="padding:14px 16px;margin-top:6px;border-top:1px solid var(--border2)"><button class="btn btn-dark btn-full" onclick="doLogout()" style="font-size:13px">LOG OUT</button></div>
+  </aside>
+
+  <main class="db-main">
+    <!-- Mobile tabs -->
+    <div class="db-tabs" id="db-tabs">
+      <button class="db-tab on" onclick="showPanel('home')">🏠 Home</button>
+      <button class="db-tab" onclick="showPanel('workout')">🏋️ Workout</button>
+      <button class="db-tab" onclick="showPanel('nutrition')">🥗 Diet</button>
+      <button class="db-tab" onclick="showPanel('ai')">🤖 AI</button>
+      <button class="db-tab" onclick="showPanel('coach')">👨‍🏫 Coach</button>
+      <button class="db-tab" onclick="showPanel('progress')">📊 Progress</button>
+      <button class="db-tab" onclick="showPanel('bmi')">🔢 BMI</button>
+      <button class="db-tab" onclick="showPanel('settings')">⚙️</button>
+    </div>
+
+    <!-- HOME PANEL -->
+    <div class="db-panel on" id="panel-home">
+      <div id="home-upgrade" class="up-banner" style="display:none"><div style="font-size:26px">⚡</div><div class="ub-txt" style="flex:1"><div>Upgrade to Premium — ₱99/month</div><div>Unlock full workouts, unlimited AI, live coaches &amp; more</div></div><button class="btn btn-red btn-sm" onclick="openSubscribe('monthly')">UPGRADE NOW</button></div>
+      <div class="row between wrap mb16"><div><div style="font-size:12px;color:var(--txt3);font-weight:600">Good day 👋</div><div class="display" style="font-size:32px;color:#fff" id="home-welcome">ALEX</div></div><div class="badge badge-red" style="font-size:12px"><span class="fire">🔥</span> <span id="streak-disp">1</span>-day streak</div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:14px">
+        <div class="stat-box"><div class="stat-num" id="home-bmi">--</div><div class="stat-lbl">BMI</div></div>
+        <div class="stat-box"><div class="stat-num" id="home-weight" style="font-size:24px">-- kg</div><div class="stat-lbl">Weight</div></div>
+        <div class="stat-box"><div class="stat-num" id="home-kcal" style="color:#FF9B57">1,950</div><div class="stat-lbl">Target kcal</div></div>
+        <div class="stat-box"><div class="stat-num"><span id="home-streak">1</span><span style="font-size:20px">🔥</span></div><div class="stat-lbl">Streak</div></div>
+      </div>
+      <div class="card-red card row between wrap mb14" style="gap:11px">
+        <div><div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px">TODAY'S WORKOUT</div><div style="font-weight:700;font-size:16px;color:#fff;margin-top:2px" id="home-today-workout">Upper Body A — Day 1</div><div style="font-size:12px;color:var(--txt3);margin-top:1px" id="home-today-meta">4 exercises · ~45 min</div></div>
+        <button class="btn btn-red" onclick="showPanel('workout')" style="font-size:14px;padding:10px 20px">START →</button>
+      </div>
+      <div class="card mb14">
+        <div class="row between mb12"><div class="display" style="font-size:18px;color:#fff">WEEK PROGRESS</div><div class="badge badge-red" id="home-week-prog">0/4 days</div></div>
+        <div style="display:flex;gap:6px;align-items:flex-end;height:56px;margin-bottom:8px" id="home-week-bars"></div>
+        <div style="display:flex;gap:6px;justify-content:space-around;font-size:10px;color:var(--txt4);font-weight:700"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+        <div class="prog-wrap mt12"><div class="prog-fill" id="home-prog-bar" style="width:0%"></div></div>
+        <div class="row between mt4"><span style="font-size:11px;color:var(--txt3)">Weekly completion</span><span style="font-size:11px;color:var(--txt2);font-weight:700" id="home-prog-pct">0%</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin-bottom:14px">
+        <button class="card card-hover" style="text-align:left;border:none;padding:14px;cursor:pointer;background:var(--card)" onclick="showPanel('ai')"><div style="font-size:24px;margin-bottom:5px">🤖</div><div style="font-weight:700;font-size:13px;color:#fff">AI Coach</div><div style="font-size:11px;color:var(--txt3);margin-top:1px">Ask anything</div></button>
+        <button class="card card-hover" style="text-align:left;border:none;padding:14px;cursor:pointer;background:var(--card)" onclick="showPanel('nutrition')"><div style="font-size:24px;margin-bottom:5px">🥗</div><div style="font-weight:700;font-size:13px;color:#fff">Log Meal</div><div style="font-size:11px;color:var(--txt3);margin-top:1px">Track today's food</div></button>
+        <button class="card card-hover" style="text-align:left;border:none;padding:14px;cursor:pointer;background:var(--card)" onclick="showPanel('bmi')"><div style="font-size:24px;margin-bottom:5px">⚖️</div><div style="font-weight:700;font-size:13px;color:#fff">Log Weight</div><div style="font-size:11px;color:var(--txt3);margin-top:1px">Update BMI stats</div></button>
+        <button class="card card-hover" style="text-align:left;border:none;padding:14px;cursor:pointer;background:var(--card)" onclick="showPanel('progress')"><div style="font-size:24px;margin-bottom:5px">📊</div><div style="font-weight:700;font-size:13px;color:#fff">My Progress</div><div style="font-size:11px;color:var(--txt3);margin-top:1px">View all stats</div></button>
+      </div>
+      <div class="card-red card"><div style="font-size:10px;color:var(--red3);font-weight:700;letter-spacing:0.5px;margin-bottom:4px">💡 TODAY'S TIP</div><div style="font-size:13px;color:var(--txt2)" id="home-tip">Drink 8+ glasses of water today. Hydration improves workout performance by up to 25%.</div></div>
+    </div>
+
+    <!-- WORKOUT PANEL -->
+    <div class="db-panel" id="panel-workout">
+      <div class="row between wrap mb16"><div><div class="display" style="font-size:28px;color:#fff">WORKOUTS</div><div style="font-size:12px;color:var(--txt3);margin-top:2px" id="wo-subtitle">Loading program...</div></div><div id="wo-week-badge" class="badge badge-red" style="font-size:12px">Week 1</div></div>
+      <div id="wo-upgrade" class="up-banner" style="display:none"><div style="font-size:24px">🔒</div><div class="ub-txt" style="flex:1"><div>Days 3+ Locked — Premium Only</div><div>Upgrade to unlock the full program</div></div><button class="btn btn-red btn-sm" onclick="openSubscribe('monthly')">UPGRADE ₱99/mo</button></div>
+      <div id="wo-bmi-banner" class="card-red card" style="margin-bottom:16px;padding:14px;display:none"><div style="font-size:10px;color:var(--red3);font-weight:700;letter-spacing:1px;margin-bottom:8px">💡 PERSONALISED FOR YOU</div><div id="wo-bmi-text" style="font-size:13px;color:var(--txt2);line-height:1.65"></div></div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px" id="day-pills"></div>
+      <div id="wo-done-screen" style="display:none">
+        <div style="text-align:center;padding:32px 20px;background:linear-gradient(135deg,rgba(34,197,94,0.1),var(--bg3));border:1.5px solid rgba(34,197,94,0.35);border-radius:18px;margin-bottom:16px">
+          <div style="font-size:56px;margin-bottom:12px">🎉</div>
+          <div class="display" style="font-size:36px;color:#4ade80;margin-bottom:8px">WORKOUT COMPLETE!</div>
+          <div style="font-size:15px;color:var(--txt3);margin-bottom:16px" id="wo-done-msg">Great job!</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:0 auto 20px">
+            <div class="stat-box" style="padding:12px"><div class="stat-num" id="wo-done-exercises" style="font-size:22px">5</div><div class="stat-lbl">Exercises</div></div>
+            <div class="stat-box" style="padding:12px"><div class="stat-num" id="wo-done-sets" style="font-size:22px">15</div><div class="stat-lbl">Sets</div></div>
+            <div class="stat-box" style="padding:12px"><div class="stat-num" id="wo-done-streak" style="font-size:22px;color:#4ade80">1🔥</div><div class="stat-lbl">Streak</div></div>
+          </div>
+          <div style="font-size:13px;color:var(--txt3);margin-bottom:20px" id="wo-done-next-msg">Next workout loading...</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-green" onclick="goToNextDay()" id="wo-next-day-btn" style="font-size:15px;padding:12px 24px">NEXT DAY →</button>
+            <button class="btn btn-dark" onclick="showWorkoutActive();resetWorkoutState();renderExercises()" style="font-size:15px;padding:12px 20px">← REVIEW</button>
+          </div>
+        </div>
+      </div>
+      <div id="wo-active-screen">
+        <div style="margin-bottom:14px">
+          <div class="row between mb4"><span style="font-size:12px;color:var(--txt3);font-weight:700">EXERCISE PROGRESS</span><span style="font-size:12px;color:#fff;font-weight:700" id="wo-ex-progress">0/5 done</span></div>
+          <div style="height:6px;background:var(--bg4);border-radius:4px;overflow:hidden"><div id="wo-ex-prog-bar" style="height:100%;background:var(--red);border-radius:4px;transition:width 0.4s;width:0%"></div></div>
+        </div>
+        <div class="card mb12" style="padding:15px">
+          <div class="row between wrap mb13"><div><div class="display" style="font-size:21px;color:#fff" id="wo-day-title">UPPER BODY A</div><div style="font-size:12px;color:var(--txt3)" id="wo-day-meta">Chest · Shoulders · Triceps</div></div><div class="badge badge-red" id="wo-day-time">45 min</div></div>
+          <div style="display:flex;flex-direction:column;gap:9px" id="wo-ex-list"></div>
+        </div>
+        <div id="wo-video-card" class="card mb12" style="display:none"></div>
+        <div id="wo-timer-card" class="card-red card" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div style="text-align:center;flex-shrink:0"><div class="display" style="font-size:44px;color:var(--red);line-height:1" id="rest-disp">60</div><div style="font-size:10px;color:var(--txt3);font-weight:700">REST TIMER</div></div>
+          <div style="flex:1">
+            <div style="font-size:10px;color:var(--red3);font-weight:700;margin-bottom:2px">CURRENT EXERCISE</div>
+            <div style="font-weight:700;font-size:15px;color:#fff" id="cur-ex-name">Bench Press</div>
+            <div style="font-size:11px;color:var(--txt3);margin-top:1px">Set <span id="cur-set-num">1</span> of <span id="cur-set-total">3</span></div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <button class="btn btn-red btn-sm" onclick="logSet()" id="log-set-btn">✓ LOG SET</button>
+              <button class="btn btn-dark btn-sm" id="rest-btn" onclick="toggleRest()">⏱ START REST</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUTRITION PANEL -->
+    <div class="db-panel" id="panel-nutrition">
+      <div class="row between wrap mb14"><div><div class="display" style="font-size:28px;color:#fff">NUTRITION LOG</div><div style="font-size:12px;color:var(--txt3)" id="nutr-date">Today</div></div><div id="nutr-kcal-badge" class="badge badge-red" style="font-size:13px">0 / 1,950 kcal</div></div>
+      <div id="nutr-warning" style="display:none;background:rgba(234,179,8,0.13);border:1.5px solid rgba(234,179,8,0.4);border-radius:14px;padding:14px 16px;margin-bottom:14px"><div style="display:flex;align-items:flex-start;gap:12px"><span style="font-size:22px;flex-shrink:0">⚠️</span><div><div style="font-weight:700;font-size:14px;color:#EAB308;margin-bottom:4px">NUTRITION LIMIT EXCEEDED</div><div style="font-size:13px;color:var(--txt2)" id="nutr-warning-msg">You've exceeded your daily calorie goal.</div></div></div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:9px;margin-bottom:14px">
+        <div class="stat-box" style="padding:11px"><div style="font-size:16px;font-weight:700;color:var(--red)" id="nt-prot">0g</div><div class="stat-lbl">Protein</div><div style="font-size:10px;color:var(--txt4);margin-top:2px" id="nt-prot-goal">/ 150g</div><div class="prog-wrap"><div class="prog-fill" id="nt-prot-bar" style="width:0%"></div></div></div>
+        <div class="stat-box" style="padding:11px"><div style="font-size:16px;font-weight:700;color:#FF9B57" id="nt-carb">0g</div><div class="stat-lbl">Carbs</div><div style="font-size:10px;color:var(--txt4);margin-top:2px" id="nt-carb-goal">/ 220g</div><div class="prog-wrap"><div class="prog-fill" id="nt-carb-bar" style="width:0%;background:#FF9B57"></div></div></div>
+        <div class="stat-box" style="padding:11px"><div style="font-size:16px;font-weight:700;color:#FFCF57" id="nt-fat">0g</div><div class="stat-lbl">Fat</div><div style="font-size:10px;color:var(--txt4);margin-top:2px" id="nt-fat-goal">/ 55g</div><div class="prog-wrap"><div class="prog-fill" id="nt-fat-bar" style="width:0%;background:#FFCF57"></div></div></div>
+        <div class="stat-box" style="padding:11px"><div style="font-size:16px;font-weight:700" id="nt-remain">1,950</div><div class="stat-lbl" id="nt-remain-lbl">Remaining</div></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:14px;padding:13px 16px;margin-bottom:14px;border:1px solid var(--border2)">
+        <div class="row between mb8"><span style="font-size:12px;font-weight:700;color:var(--txt3)">DAILY CALORIE PROGRESS</span><span style="font-size:12px;font-weight:700;color:#fff" id="nt-kcal-pct">0%</span></div>
+        <div style="height:10px;background:var(--bg4);border-radius:6px;overflow:hidden"><div id="nt-kcal-bar" style="height:100%;border-radius:6px;transition:width 0.4s;width:0%;background:var(--red)"></div></div>
+        <div class="row between" style="margin-top:6px"><span style="font-size:11px;color:var(--txt4)" id="nt-kcal-eaten">0 kcal eaten</span><span style="font-size:11px;color:var(--txt4)" id="nt-kcal-target">Goal: 1,950 kcal</span></div>
+      </div>
+      <div class="card mb12" style="padding:0;overflow:hidden">
+        <div class="food-cat-header row between"><span style="color:#fff;font-weight:700">🌅 BREAKFAST</span><button class="btn btn-red btn-sm" onclick="openFoodPicker('breakfast')" style="font-size:11px;padding:4px 12px">+ ADD FOOD</button></div>
+        <div id="log-breakfast"></div>
+        <div class="food-cat-header row between" style="border-top:1px solid var(--border2)"><span style="color:#fff;font-weight:700">☀️ LUNCH</span><button class="btn btn-red btn-sm" onclick="openFoodPicker('lunch')" style="font-size:11px;padding:4px 12px">+ ADD FOOD</button></div>
+        <div id="log-lunch"></div>
+        <div class="food-cat-header row between" style="border-top:1px solid var(--border2)"><span style="color:#fff;font-weight:700">🌙 DINNER</span><button class="btn btn-red btn-sm" onclick="openFoodPicker('dinner')" style="font-size:11px;padding:4px 12px">+ ADD FOOD</button></div>
+        <div id="log-dinner"></div>
+        <div class="food-cat-header row between" style="border-top:1px solid var(--border2)"><span style="color:#fff;font-weight:700">🍌 SNACKS</span><button class="btn btn-red btn-sm" onclick="openFoodPicker('snacks')" style="font-size:11px;padding:4px 12px">+ ADD FOOD</button></div>
+        <div id="log-snacks"></div>
+      </div>
+      <button class="btn btn-ghost btn-full" onclick="showPanel('ai')" style="font-size:15px">🤖 ASK AI FOR MEAL IDEAS</button>
+    </div>
+
+    <!-- AI PANEL -->
+    <div class="db-panel" id="panel-ai">
+      <div class="row between wrap mb14"><div><div class="display" style="font-size:28px;color:#fff">AI FITNESS COACH</div><div style="font-size:12px;color:var(--txt3);margin-top:2px" id="db-quota-disp">Loading...</div></div></div>
+      <div class="chat-box" style="height:420px">
+        <div class="chat-hd"><div style="width:32px;height:32px;background:var(--red4);border:1.5px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🤖</div><div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:#fff">GYMFIT PH AI</div><div style="font-size:10px;color:var(--red3)" id="db-ai-st">🟢 Online</div></div></div>
+        <div class="chips"><div class="chip" onclick="dbQ('Create a full 1-month workout plan for me')">📅 Month Plan</div><div class="chip" onclick="dbQ('Give me a 7-day Filipino-friendly meal plan')">🥗 Meal Plan</div><div class="chip" onclick="dbQ('What are the best fat burning exercises?')">🔥 Fat Loss</div><div class="chip" onclick="dbQ('How do I build muscle fast as a beginner?')">💪 Muscle</div><div class="chip" onclick="dbQ('What supplements should I take?')">💊 Supps</div></div>
+        <div class="chat-log" id="db-ai-log"><div class="bubble bubble-ai"><div style="font-weight:700;color:var(--red3);margin-bottom:3px;font-size:11px">🤖 GYMFIT PH AI</div>Welcome back! Ask me anything about workouts, nutrition, or your fitness goals! 💪</div></div>
+        <div id="db-typing" style="padding:5px 12px;display:none"><div style="background:var(--bg3);border:1px solid var(--border2);border-radius:13px;padding:8px 12px;display:inline-flex;gap:4px"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+        <div class="chat-inp-row"><textarea id="db-ai-inp" placeholder="Ask your AI coach..." style="flex:1;padding:8px 12px;background:var(--bg4);border:1.5px solid var(--border2);border-radius:11px;font-family:'Barlow',sans-serif;font-size:13px;color:#fff;outline:none;resize:none;min-height:38px;max-height:76px;line-height:1.4;transition:border-color 0.2s" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dbSendAI()}" oninput="autoH(this)"></textarea><button onclick="dbSendAI()" style="width:38px;height:38px;background:var(--red);border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">➤</button></div>
+      </div>
+    </div>
+
+    <!-- COACH PANEL -->
+    <div class="db-panel" id="panel-coach">
+      <div class="display" style="font-size:28px;color:#fff;margin-bottom:14px">ONLINE COACHES</div>
+      <div id="coach-lock-msg" class="up-banner" style="display:none;margin-bottom:14px"><div style="font-size:24px">🔒</div><div class="ub-txt" style="flex:1"><div>Coach Access — Premium Only</div><div>Upgrade to chat with certified Filipino trainers</div></div><button class="btn btn-red btn-sm" onclick="openSubscribe('monthly')">UPGRADE</button></div>
+      <div class="g3 mb14">
+        <div class="coach-card"><div class="coach-ava" style="height:100px">👨<div style="position:absolute;top:7px;right:7px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700">🟢 Online</div></div><div style="padding:12px"><div class="display" style="font-size:16px;color:#fff;margin-bottom:1px">MARCUS R.</div><div style="font-size:11px;color:var(--txt3);margin-bottom:8px">Strength · ★ 4.9</div><button class="btn btn-red btn-full btn-sm" onclick="openCoach('Marcus','Strength & Hypertrophy')">CHAT →</button></div></div>
+        <div class="coach-card"><div class="coach-ava" style="height:100px">👩<div style="position:absolute;top:7px;right:7px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700">🟢 Online</div></div><div style="padding:12px"><div class="display" style="font-size:16px;color:#fff;margin-bottom:1px">ALYSSA M.</div><div style="font-size:11px;color:var(--txt3);margin-bottom:8px">Fat Loss · ★ 4.8</div><button class="btn btn-red btn-full btn-sm" onclick="openCoach('Alyssa','Weight Loss & HIIT')">CHAT →</button></div></div>
+        <div class="coach-card"><div class="coach-ava" style="height:100px">👨‍🦱<div style="position:absolute;top:7px;right:7px;background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.4);color:#EAB308;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700">🟡 Busy</div></div><div style="padding:12px"><div class="display" style="font-size:16px;color:#fff;margin-bottom:1px">RICO P.</div><div style="font-size:11px;color:var(--txt3);margin-bottom:8px">Nutrition · ★ 5.0</div><button class="btn btn-dark btn-full btn-sm" onclick="toast('Coach Rico is busy. Try tomorrow!','info')">SCHEDULE</button></div></div>
+      </div>
+      <div id="coach-chat-area" style="display:none">
+        <div class="row between wrap mb11"><div class="display" style="font-size:20px;color:#fff" id="coach-chat-title">COACH MARCUS</div><button class="btn btn-dark btn-sm" onclick="document.getElementById('coach-chat-area').style.display='none'">CLOSE ✕</button></div>
+        <div class="chat-box" style="height:360px">
+          <div class="chat-hd"><div style="width:32px;height:32px;background:var(--red4);border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0" id="coach-ava-icon">👨</div><div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:#fff" id="coach-chat-name2">Coach Marcus</div><div style="font-size:10px;color:var(--green)">🟢 Online</div></div></div>
+          <div class="chat-log" id="coach-log"></div>
+          <div id="coach-typing" style="padding:5px 12px;display:none"><div style="background:var(--bg3);border:1px solid var(--border2);border-radius:13px;padding:8px 12px;display:inline-flex;gap:4px"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+          <div class="chat-inp-row"><textarea id="coach-inp" placeholder="Message your coach..." style="flex:1;padding:8px 12px;background:var(--bg4);border:1.5px solid var(--border2);border-radius:11px;font-family:'Barlow',sans-serif;font-size:13px;color:#fff;outline:none;resize:none;min-height:38px;max-height:76px;line-height:1.4" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCoach()}" oninput="autoH(this)"></textarea><button onclick="sendCoach()" style="width:38px;height:38px;background:var(--red);border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">➤</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS PANEL -->
+    <div class="db-panel" id="panel-progress">
+      <div class="row between wrap mb14"><div class="display" style="font-size:28px;color:#fff">MY PROGRESS</div><button class="btn btn-dark btn-sm" onclick="showPanel('bmi')">+ LOG WEIGHT</button></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:14px">
+        <div class="stat-box"><div class="stat-num" id="prog-bmi">--</div><div class="stat-lbl">BMI</div></div>
+        <div class="stat-box"><div class="stat-num" id="prog-weight" style="font-size:22px">-- kg</div><div class="stat-lbl">Weight</div></div>
+        <div class="stat-box"><div class="stat-num" id="prog-streak"><span style="font-size:20px">1</span>🔥</div><div class="stat-lbl">Streak</div></div>
+        <div class="stat-box"><div class="stat-num" id="prog-workouts" style="color:var(--green)">0</div><div class="stat-lbl">Workouts Done</div></div>
+      </div>
+      <div class="card mb12"><div class="row between mb12"><div class="display" style="font-size:18px;color:#fff">BMI HISTORY</div><div class="badge badge-red" id="prog-bmi-badge">Current: --</div></div><div style="display:flex;align-items:flex-end;gap:4px;height:60px;padding:0 2px" id="prog-bmi-bars"></div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt4);font-weight:700;margin-top:5px" id="prog-bmi-labels"></div></div>
+      <div class="card mb12"><div class="row between mb12"><div class="display" style="font-size:18px;color:#fff">WEIGHT LOG</div></div><div id="weight-log-list" style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:7px"></div></div>
+      <div class="card"><div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--txt3);margin-bottom:11px;text-transform:uppercase">Achievements</div><div style="display:flex;flex-wrap:wrap;gap:11px" id="achievements"></div></div>
+    </div>
+
+    <!-- BMI TRACKER PANEL -->
+    <div class="db-panel" id="panel-bmi">
+      <div class="row between wrap mb14"><div><div class="display" style="font-size:28px;color:#fff">BMI TRACKER</div><div style="font-size:12px;color:var(--txt3);margin-top:2px" id="bmi-last-update">Enter your stats below</div></div></div>
+      <div class="g2" style="gap:18px">
+        <div class="card">
+          <div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:13px;text-transform:uppercase">Your Stats</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><label class="lbl">Height (cm)</label><input class="inp" type="number" id="db-h" placeholder="e.g. 170" min="50" max="300" oninput="liveDbBmi()"></div>
+            <div><label class="lbl">Weight (kg)</label><input class="inp" type="number" id="db-w" placeholder="e.g. 70" min="20" max="500" step="0.1" oninput="liveDbBmi()"></div>
+            <div><label class="lbl">Age</label><input class="inp" type="number" id="db-age" placeholder="e.g. 22" min="10" max="100" oninput="liveDbBmi()"></div>
+            <button class="btn btn-red btn-full" onclick="saveBMI()" style="font-size:15px;padding:13px">💾 SAVE &amp; UPDATE BMI →</button>
+            <div style="font-size:12px;color:var(--txt4);text-align:center">Changes save to your profile permanently</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="text-align:center;margin-bottom:14px">
+            <div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:5px;text-transform:uppercase">Your BMI</div>
+            <div id="db-bmi-val" class="display" style="font-size:68px;color:var(--red);line-height:1">--</div>
+            <div id="db-bmi-cat" class="badge badge-red mt8" style="font-size:12px;padding:5px 14px">Enter stats →</div>
+          </div>
+          <div class="bmi-meter"><div class="bmi-needle" id="db-bmi-needle" style="left:50%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt4);margin-bottom:12px;font-weight:700"><span>Under</span><span>Normal</span><span>Over</span><span>Obese</span></div>
+          <div id="db-bmi-rec" class="card-red card" style="font-size:12px;color:var(--txt2);line-height:1.65">Enter your height and weight to get your BMI analysis.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+            <div class="stat-box" style="padding:10px"><div style="font-size:14px;font-weight:700;color:var(--red)" id="bmi-kcal-rec">--</div><div class="stat-lbl">Target kcal/day</div></div>
+            <div class="stat-box" style="padding:10px"><div style="font-size:14px;font-weight:700;color:#FF9B57" id="bmi-prot-rec">--</div><div class="stat-lbl">Protein goal/day</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPLEMENTS PANEL -->
+    <div class="db-panel" id="panel-supplement">
+      <div class="display" style="font-size:28px;color:#fff;margin-bottom:4px">SUPPLEMENT GUIDE</div>
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Personalized based on your goal and experience</div>
+      <div id="supp-content" class="g2" style="gap:12px"></div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div class="db-panel" id="panel-settings">
+      <div class="display" style="font-size:28px;color:#fff;margin-bottom:18px">ACCOUNT SETTINGS</div>
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:480px">
+        <div class="card">
+          <div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:13px;text-transform:uppercase">Profile</div>
+          <div class="row gap12 mb14"><div style="width:52px;height:52px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#fff" id="set-ava">A</div><div><div style="font-weight:700;font-size:15px;color:#fff" id="set-name-disp">Alex</div><div style="font-size:12px;color:var(--txt3)" id="set-email-disp">user@email.com</div><div id="set-plan-badge" style="margin-top:4px"></div></div></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div><label class="lbl">Display Name</label><input class="inp" type="text" id="set-name" placeholder="Your name"></div>
+            <div><label class="lbl">Email (cannot change)</label><input class="inp" type="email" id="set-email" disabled style="opacity:0.5;cursor:not-allowed"></div>
+            <div><label class="lbl">Your Goal</label><select class="inp" id="set-goal"><option value="lose">Lose Weight</option><option value="muscle">Build Muscle</option><option value="fit">Get Fit &amp; Toned</option><option value="maintain">Maintain Health</option></select></div>
+            <div><label class="lbl">Experience Level</label><select class="inp" id="set-exp"><option value="beginner">Beginner (0–6 months)</option><option value="intermediate">Intermediate (6mo–2 years)</option><option value="advanced">Advanced (2+ years)</option></select></div>
+            <button class="btn btn-red" onclick="saveSettings()" style="font-size:14px;padding:11px 22px;align-self:flex-start">SAVE CHANGES</button>
+          </div>
+        </div>
+        <div class="card"><div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase">Subscription</div><div id="set-sub-info"></div></div>
+        <div class="card"><div style="font-size:10px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase">Account Actions</div><button class="btn btn-dark btn-full" onclick="doLogout()" style="font-size:13px">LOG OUT OF ACCOUNT</button></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div><!-- /dashboard -->
+
+<!-- ============================================================
+     JAVASCRIPT — Load order matters!
+     1. data.js    — localStorage state & toast
+     2. auth.js    — login, signup, subscription
+     3. nav.js     — page routing & mobile menus
+     4. bmi.js     — BMI calculator
+     5. workout.js — workout programs & weight recommendations
+     6. nutrition.js — food database & meal logging
+     7. progress.js  — progress charts & achievements
+     8. dashboard.js — dashboard render, panels, settings
+     9. ai.js      — AI coaching & coach chat
+    10. app.js     — init entry point (runs last)
+============================================================ -->
+<script src="js/data.js"></script>
+<script src="js/otp.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/bmi.js"></script>
+<script src="js/workout.js"></script>
+<script src="js/nutrition.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

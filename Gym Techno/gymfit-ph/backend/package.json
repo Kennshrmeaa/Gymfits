@@ -1,0 +1,10 @@
+{
+  "name": "gymfit-ph-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Backend API for GymFit PH email OTP verification and PayMongo checkout",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
