@@ -136,13 +136,28 @@ async function apiRequest(path,options={}){
   }
 
   if(!response.ok){
-    const err=new Error(payload.message||payload.error||`Request failed with ${response.status}`);
+    let message = payload.message || payload.error;
+    if(typeof message === 'object' && message !== null){
+      try{ message = JSON.stringify(message); }catch{ message = String(message); }
+    }
+    const err=new Error(typeof message === 'string' && message ? message : `Request failed with ${response.status}`);
     err.status=response.status;
     err.payload=payload;
     throw err;
   }
 
   return payload;
+}
+
+function normalizeToastMessage(msg){
+  if(msg === null || msg === undefined) return '';
+  if(typeof msg === 'string') return msg;
+  if(typeof msg === 'object'){
+    if(typeof msg.message === 'string' && msg.message) return msg.message;
+    if(typeof msg.error === 'string' && msg.error) return msg.error;
+    try{ return JSON.stringify(msg); }catch{ return String(msg); }
+  }
+  return String(msg);
 }
 
 async function apiHealth(){
@@ -267,6 +282,8 @@ function cancelSub(){
 let tT;
 function toast(msg,type='info',ms=3200){
   const el=document.getElementById('toast');
-  el.textContent=msg;el.className='toast show '+type;
+  const text = normalizeToastMessage(msg);
+  el.textContent=text;
+  el.className='toast show '+type;
   clearTimeout(tT);tT=setTimeout(()=>{el.className='toast';},ms);
 }

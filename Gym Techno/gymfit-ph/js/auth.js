@@ -223,7 +223,7 @@ async function doSignup(){
     otpState=await sendOTP(data.email);
     if(!otpState)return;
   }catch(err){
-    toast(err.message||'Could not send the verification code right now.','err',6000);
+    toast(err || 'Could not send the verification code right now.','err',6000);
     return;
   }
 
@@ -255,7 +255,7 @@ async function resendSignupOTP(){
     if(!otpState)return;
     showSignupVerification(pendingSignup,otpState);
   }catch(err){
-    toast(err.message||'Could not resend the verification code.','err');
+    toast(err || 'Could not resend the verification code.','err');
   }
 }
 
@@ -276,7 +276,7 @@ async function verifySignupOTP(){
   try{
     await verifyOTP(otp,pendingSignup.email);
   }catch(err){
-    toast(err.message||'Verification failed.','err');
+    toast(err || 'Verification failed.','err');
     return;
   }
 
